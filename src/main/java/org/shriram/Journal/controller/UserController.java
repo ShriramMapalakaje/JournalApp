@@ -1,14 +1,21 @@
 package org.shriram.Journal.controller;
 
+import org.shriram.Journal.api.response.QuoteResponse;
+import org.shriram.Journal.api.response.WeatherResponse;
 import org.shriram.Journal.entity.User;
 import org.shriram.Journal.repository.UserRepository;
+import org.shriram.Journal.service.QuoteService;
 import org.shriram.Journal.service.UserService;
+import org.shriram.Journal.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
@@ -20,6 +27,10 @@ public class UserController {
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private WeatherService weatherService;
+    @Autowired
+    private QuoteService quoteService;
 
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody User user) {
@@ -39,6 +50,25 @@ public class UserController {
         userRepository.deleteByUserName(userName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @GetMapping
+    public ResponseEntity<?> greetings() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        WeatherResponse weather = weatherService.getWeather("Bangalore");
+        QuoteResponse quoteResponse = quoteService.getQuote();
+
+        String greeting = "Hi " + authentication.getName();
+        if (weather != null) {
+            greeting += "\nWeather feels like: " + weather.getCurrent().getFeelslike();
+        }
+        if (quoteResponse != null) {
+            greeting += "\nQuote: " + quoteResponse.toString();
+        }
+
+        return ResponseEntity.ok(greeting);
+    }
+
+
+
 
 
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/public")
+@CrossOrigin(origins = "http://localhost:3000") // allow requests from React
 public class PublicController {
     @Autowired
     private UserService userService;
@@ -22,3 +23,4 @@ public class PublicController {
         userService.saveNewUser(user);
     }
 }
+
