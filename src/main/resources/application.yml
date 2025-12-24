@@ -1,0 +1,15 @@
+spring:
+  data:
+    mongodb:
+      uri: ${DATABASE_URL}
+      database: ${DATABASE_NAME}
+      auto-index-creation: true
+
+server:
+  port: 8080
+#  servlet:
+#    context-path: /journal
+
+weather:
+  api:
+    key: ${WEATHER_API_KEY}
